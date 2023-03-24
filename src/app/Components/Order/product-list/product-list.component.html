@@ -1,0 +1,62 @@
+<div class="mb-3">
+  <label for="prdCat" class="form-label">Category:</label>
+  <!-- <select #cat name="cat" id="prdCat" class="form-control" (change)="getSelCat(cat.value)"> -->
+  <!-- <select name="cat" id="prdCat" class="form-control" (change)="getSelCat($event)"> //In ts// event.target.value -->
+  <select
+    name="cat"
+    id="prdCat"
+    class="form-control"
+    [(ngModel)]="selectedCatID"
+  >
+    <option *ngFor="let cat of catList" [value]="cat.id">{{ cat.name }}</option>
+  </select>
+</div>
+<div class="text-secondary">
+  [To be removed] For Test:
+  {{ selectedCatID }}
+</div>
+<button type="button" class="btn btn-success" (click)="changeCat()">
+  Change Cat
+</button>
+<hr />
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Image</th>
+      <th>Av. Quantity</th>
+      <th>Price</th>
+      <th>Count</th>
+      <th>Buy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let prd of prdList"
+      [class.bg-warning]="prd.quantity === 0"
+      [style.color]="prd.quantity === 0 ? 'red' : 'green'"
+    >
+      <!-- safe navegation operator -->
+      <td>{{ prd?.id }}</td>
+      <td>{{ prd.name }}</td>
+      <td><img [src]="prd.imgURL" alt="product image" /></td>
+      <td>{{ prd.quantity }}</td>
+      <td>{{ prd.price }}</td>
+      <!-- template variable -->
+      <td>
+        <input #itemsCount type="number" name="" id="" class="form-control" />
+      </td>
+      <td>
+        <button
+          class="btn btn-secondary"
+          (click)="buy(prd.price, itemsCount.value)"
+        >
+          Buy
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr />
+<h3>Order Total Price : {{ orderTotalPrice }}</h3>
