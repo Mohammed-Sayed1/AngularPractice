@@ -18,6 +18,8 @@
 <button type="button" class="btn btn-success" (click)="changeCat()">
   Change Cat
 </button>
+<br />
+Order Date: {{ orderDate | date : "longDate" }}
 <hr />
 <table class="table">
   <thead>
@@ -26,23 +28,79 @@
       <th>Name</th>
       <th>Image</th>
       <th>Av. Quantity</th>
-      <th>Price</th>
+      <th>Price in USD</th>
+      <th>Price in EGP</th>
       <th>Count</th>
       <th>Buy</th>
     </tr>
   </thead>
   <tbody>
-    <tr
-      *ngFor="let prd of prdList"
+    <!-- trackBy used to specify iterable objects identity,
+    and so inhance performance of ngfor in case of changes to the collection,
+  and update the changed object without re-build the DOM -->
+    <!-- <tr
+      *ngFor="let prd of prdList; let i = index; trackBy: prdTrackByFun"
       [class.bg-warning]="prd.quantity === 0"
       [style.color]="prd.quantity === 0 ? 'red' : 'green'"
+    > -->
+    <!-- <tr *ngFor="let prd of prdList; let i = index" [hidden]="prd.quantity == 0"> -->
+    <!--
+        *ngIf (structural directive in general) change in DOM,
+        while class binding like [hidden] just hide the DOM element but still exist
+        - use *ngIf => if the collection doesn't change in runtime,
+        - and use any binding if the collection changes.
+        = note: We can't use two structural directives on same element,
+        but can use <ng-container> one or more as work around, and it doesn't reflect on actual DOM
+      -->
+    <!--
+        - ng-container vs ng-template vs ng-content
+        https://www.freecodecamp.org/news/everything-you-need-to-know-about-ng-template-ng-content-ng-container-and-ngtemplateoutlet-4b7b51223691/
+      -->
+    <!-- <ng-container *ngFor="let prd of prdList; let i = index">
+      <tr *ngIf="prd.quantity != 0"> -->
+    <!-- <tr
+      *ngFor="let prd of prdList; let i = index"
+      [ngClass]="{
+        'bg-danger': prd.quantity == 0,
+        'text-warning': prd.quantity == 0
+      }"
+    > -->
+    <tr
+      *ngFor="let prd of prdList; let i = index"
+      [ngStyle]="{
+        'background-color': prd.quantity == 0 ? 'red' : 'yellow',
+        color: prd.quantity == 0 ? 'green' : 'blue'
+      }"
     >
       <!-- safe navegation operator -->
-      <td>{{ prd?.id }}</td>
+      <td>{{ i + 1 }}</td>
       <td>{{ prd.name }}</td>
-      <td><img [src]="prd.imgURL" alt="product image" /></td>
-      <td>{{ prd.quantity }}</td>
-      <td>{{ prd.price }}</td>
+      <td>
+        <!-- <img LightBox="red" [src]="prd.imgURL" alt="product image" /> -->
+
+        <img
+          LightBox="red"
+          defaultColor="cyan"
+          [src]="prd.imgURL"
+          alt="product image"
+        />
+      </td>
+      <td>
+        <!-- <div *ngIf="prd.quantity != 0">{{ prd.quantity }}</div>
+        <div *ngIf="prd.quantity == 0">Out of stock</div> -->
+
+        <!-- <div *ngIf="prd.quantity != 0; else outOfStock">{{ prd.quantity }}</div>
+        <ng-template #outOfStock>Out of stock</ng-template> -->
+
+        <ng-container [ngSwitch]="prd.quantity">
+          <ng-template ngSwitchCase="0">Out of stock</ng-template>
+          <ng-template ngSwitchCase="1">Last item!</ng-template>
+          <ng-template ngSwitchCase="2">Last 2 items</ng-template>
+          <ng-template ngSwitchDefault>{{ prd.quantity }}</ng-template>
+        </ng-container>
+      </td>
+      <td>{{ prd.price | currency : "USD" : "symbol" }}</td>
+      <td>{{ prd.price | USDtoEGY : 10 | currency : "EGP" : "code" }}</td>
       <!-- template variable -->
       <td>
         <input #itemsCount type="number" name="" id="" class="form-control" />
@@ -56,6 +114,7 @@
         </button>
       </td>
     </tr>
+    <!-- </ng-container> -->
   </tbody>
 </table>
 <hr />

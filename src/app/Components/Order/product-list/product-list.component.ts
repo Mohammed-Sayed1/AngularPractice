@@ -12,6 +12,7 @@ export class ProductListComponent implements OnInit {
   selectedCatID: number = 0;
   prdList: IProduct[];
   orderTotalPrice: number = 0;
+  orderDate: Date;
   constructor() {
     this.catList = [
       { id: 1, name: 'Laptop' },
@@ -22,7 +23,7 @@ export class ProductListComponent implements OnInit {
       {
         id: 100,
         name: 'LenovoThinkpad laptop',
-        price: 100,
+        price: 10000000,
         quantity: 1,
         imgURL: 'https://fakeimg.pl/200x100',
         categoryID: 1,
@@ -30,7 +31,7 @@ export class ProductListComponent implements OnInit {
       {
         id: 200,
         name: 'Apple MacBook laptop',
-        price: 200,
+        price: 2007780,
         quantity: 0,
         imgURL: 'https://fakeimg.pl/200x100',
         categoryID: 1,
@@ -38,13 +39,13 @@ export class ProductListComponent implements OnInit {
       {
         id: 300,
         name: 'Lenovo Tap 2',
-        price: 300,
+        price: 3000,
         quantity: 10,
         imgURL: 'https://fakeimg.pl/200x100',
         categoryID: 2,
       },
       {
-        id: 400,
+        id: 40.5,
         name: 'Samsung Tap',
         price: 400,
         quantity: 2,
@@ -52,7 +53,7 @@ export class ProductListComponent implements OnInit {
         categoryID: 2,
       },
       {
-        id: 500,
+        id: 50000,
         name: 'Samsung Note 10',
         price: 500,
         quantity: 0,
@@ -68,6 +69,8 @@ export class ProductListComponent implements OnInit {
         categoryID: 1,
       },
     ];
+
+    this.orderDate = new Date();
   }
 
   buy(prdPrice: number, count: string) {
@@ -78,6 +81,10 @@ export class ProductListComponent implements OnInit {
 
   changeCat() {
     this.selectedCatID = Math.ceil(Math.random() * 3);
+  }
+
+  prdTrackByFun(index: number, prd: IProduct): number {
+    return prd.id;
   }
 
   ngOnInit(): void {}
